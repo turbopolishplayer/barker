@@ -1,5 +1,6 @@
 const { MongoClient } = require('mongodb');
 const bcrypt = require('bcrypt');
+const joi = require('joi');
 
 
 mongoUrl = 'mongodb://localhost:27017/barker'
@@ -29,7 +30,6 @@ async function createUser(email, name, lastname, password){
     }
     client.close();
 }
-
 
 async function dbConnect(){
     let dbconnection;
