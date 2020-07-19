@@ -1,12 +1,12 @@
 const { MongoClient } = require('mongodb');
 const bcrypt = require('bcrypt');
-const joi = require('joi');
 
 
-mongoUrl = 'mongodb://localhost:27017/barker'
+mongoUrl = process.env.MONGOURI || 'mongodb://localhost:27017/barker';
 
 
 async function createUser(email, name, lastname, password){
+
     const hashPassword = await bcrypt.hash(password, 10);
     const user = {
         email: email,
@@ -15,9 +15,11 @@ async function createUser(email, name, lastname, password){
         password: hashPassword
     }
 
+    if(await findUserByEmail(email)) throw new Error('Email already used');
+
     let client;
     try{
-        client = await dbConnect();
+        client = await createClient();
     }catch(error){
         throw error;
     }
@@ -29,17 +31,40 @@ async function createUser(email, name, lastname, password){
         console.log(error.message)
     }
     client.close();
+    return 'User added successfully'
 }
 
-async function dbConnect(){
+async function findUserByEmail(email){
+    let client;
+    try{
+        client = await createClient();
+    }catch(error){
+        throw error;
+    }
+    const db = client.db();
+
+    let result;
+    try{
+        result = await db.collection('users').findOne({ email: email });
+    }catch(error){
+        console.log(error.message)
+    }
+
+    client.close();
+    return result;
+
+}
+
+async function createClient(){
     let dbconnection;
     try{
         dbconnection = await MongoClient.connect(mongoUrl, { useUnifiedTopology: true });
     }catch(error){
-        throw error;
+        console.log(error.message);
+        // throw error;
     }
 
     return dbconnection;
 }
 
-createUser('asd@asd.pl', 'dawid', 'wengrzik', 'zupa');
+createUser('dawid@asd.pl', 'dawid', 'wengrzik', 'zupa');
