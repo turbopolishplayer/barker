@@ -39,59 +39,7 @@ const createUser = async function(email, name, lastname, password){
         client.close();
     }
 
-    return 'User added successfully'
-}
-
-
-
-
-const getUserByEmail = async function(email){
-    let client;
-    try{
-        client = await createClient();
-    }catch(error){
-        throw error;
-    }
-    const db = client.db();
-
-    let result;
-    try{
-        result = await db.collection('users').findOne({ email: email });
-    }catch(error){
-        console.log(error.message)
-    }finally{
-        client.close();
-    }
-
-    return result;
-
-}
-
-
-
-
-const getUserByEmailWithoutPassword = async function(email){
-
-    let client;
-    try{
-        client = await createClient();
-    }catch(error){
-        throw error;
-    }
-    const db = client.db();
-
-    let result;
-    try{
-        result = await db.collection('users').findOne({ email: email });
-    }catch(error){
-        throw error;
-    }finally{
-        client.close();
-    }
-
-    delete result.password;
-    return result;
-
+    return true;
 }
 
 
@@ -189,7 +137,11 @@ const deletePostFromUser = async function(postID, owner){
     return true;
 }
 
+
+
+
 const changePassword = async function (userEmail, newPassword){
+    if(!(await getUserByEmail(userEmail))) throw new Error('This email is not used');
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
@@ -215,6 +167,58 @@ const changePassword = async function (userEmail, newPassword){
 
 
 
+const getUserByEmail = async function(email){
+    let client;
+    try{
+        client = await createClient();
+    }catch(error){
+        throw error;
+    }
+    const db = client.db();
+
+    let result;
+    try{
+        result = await db.collection('users').findOne({ email: email });
+    }catch(error){
+        console.log(error.message)
+    }finally{
+        client.close();
+    }
+
+    return result;
+
+}
+
+
+
+
+const getUserByEmailWithoutPassword = async function(email){
+
+    let client;
+    try{
+        client = await createClient();
+    }catch(error){
+        throw error;
+    }
+    const db = client.db();
+
+    let result;
+    try{
+        result = await db.collection('users').findOne({ email: email });
+    }catch(error){
+        throw error;
+    }finally{
+        client.close();
+    }
+
+    delete result.password;
+    return result;
+
+}
+
+
+
+
 const createClient = async function(){
     let dbConnection;
     try{
@@ -229,4 +233,13 @@ const createClient = async function(){
 
 
 
-module.exports = createUser;
+module.exports = {
+    createUser,
+    getUserByEmail,
+    getUserByEmailWithoutPassword,
+    addFollowToUser,
+    removeFollowFromUser,
+    assignPostToUser,
+    deletePostFromUser,
+    changePassword
+};
