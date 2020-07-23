@@ -114,6 +114,54 @@ const updatePost = async function(postID, newContent){
 
 }
 
+const asingComment = async function(postID, commentID){
+
+    if(!(await getPost(postID))) throw new Error('This post doesn\'t exist');
+
+    let client;
+
+    try{
+        client = await createClient();
+    }catch(error){
+        throw error;
+    }
+    const db = client.db();
+
+    try{
+        await db.collection('posts').updateOne({ "_id": ObjectID(postID)}, { $addToSet: { comments: commentID }})
+    }catch(error){
+        throw(error);
+    }finally{
+        client.close();
+    }
+
+    return true;
+}
+
+const unAsingComment = async function(postID, commentID){
+
+    if(!(await getPost(postID))) throw new Error('This post doesn\'t exist');
+
+    let client;
+
+    try{
+        client = await createClient();
+    }catch(error){
+        throw error;
+    }
+    const db = client.db();
+
+    try{
+        await db.collection('posts').updateOne({ "_id": ObjectID(postID)}, { $pull: { comments: commentID }})
+    }catch(error){
+        throw(error);
+    }finally{
+        client.close();
+    }
+
+    return true;
+}
+
 
 
 
@@ -154,4 +202,18 @@ const createClient = async function(){
     }
 
     return dbConnection;
+}
+
+
+
+
+module.exports = {
+    createClient,
+    removePost,
+    unAsingComment,
+    asingComment,
+    updatePost,
+    getPost,
+    getAllPost,
+    addPost
 }
