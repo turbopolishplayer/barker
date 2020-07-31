@@ -8,8 +8,8 @@ const addPost = async function(ownerEmail, postContent){
     const post = {
         owner: ownerEmail,
         content: postContent,
-        comments: [],
-        likes: []
+        comments: [], //comments id 
+        likes: [] //users id 
     }
 
     let client;
@@ -193,7 +193,7 @@ const removePost = async function(postID){
 
 
 
-const createClient = async function(){
+async function createClient(){
     let dbConnection;
     try{
         dbConnection = await MongoClient.connect(mongoUrl, { useUnifiedTopology: true });

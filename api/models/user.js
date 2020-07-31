@@ -2,7 +2,7 @@ const { MongoClient } = require('mongodb');
 const bcrypt = require('bcrypt');
 
 
-const mongoUrl = process.env.MONGOURI || 'mongodb://localhost:27017/barker';
+const mongoUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/barker';
 
 
 
@@ -219,7 +219,7 @@ const getUserByEmailWithoutPassword = async function(email){
 
 
 
-const createClient = async function(){
+async function createClient(){
     let dbConnection;
     try{
         dbConnection = await MongoClient.connect(mongoUrl, { useUnifiedTopology: true });

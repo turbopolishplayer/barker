@@ -1,14 +1,15 @@
 const userModel = require('../models/user.js');
 
+beforeAll(() => {
+    return userModel.createUser('bubus@asd.pl', 'bubus', 'bubus', 'zupa');
+})
 
 test('create user', async () => {
-    expect(await userModel.createUser('goodtest@asd.pl', 'bubus', 'bubus', 'zupa')).toBe(true);
+    expect(await userModel.createUser('bbbbb@asd.pl', 'bubus', 'bubus', 'zupa')).toBe(true);
 });
 
 test('create user when email exist', async () => {
-    try{
-        await userModel.createUser('bubus@asd.pl', 'bubus', 'bubus', 'zupa');
-    }catch(error){
-        expect(error).toEqual(new Error('Email already used'));
-    }
+
+    await expect(userModel.createUser('bubus@asd.pl', 'bubus', 'bubus', 'zupa')).rejects.toThrow();
+
 });
