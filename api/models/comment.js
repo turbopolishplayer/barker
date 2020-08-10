@@ -35,7 +35,7 @@ const addComment = async function(ownerEmail, underPostID, content){
 
 
 
-const getAllPost = async function(ownerEmail){
+const getAllComments = async function(ownerEmail){
 
     let client;
 
@@ -61,7 +61,7 @@ const getAllPost = async function(ownerEmail){
 }
 
 
-const getPost = async function(commentID){
+const getComment = async function(commentID){
 
     let client;
 
@@ -85,7 +85,52 @@ const getPost = async function(commentID){
 
 
 
+const updateComment = async function(commentID, newContent){
+    
+    if(!(await getComment(commentID))) throw new Error('This comment doesn\'t exist');
+    l
+    let client;
 
+    try{
+        client = await createClient();
+    }catch(error){
+        throw error;
+    }
+    const db = client.db();
+
+    try{
+        await db.collection('comments').findOneAndUpdate({ "_id": ObjectID(commentID)}, { $set: { "content": newContent }});
+    }catch(error){
+        throw(error);
+    }finally{
+        client.close();
+    }
+
+    return true;
+}
+
+const removeComment = async function(commentID){
+    if(!(await getComment(commentID))) throw new Error('This comment doesn\'t exist');
+
+    let client;
+
+    try{
+        client = await createClient();
+    }catch(error){
+        throw error;
+    }
+    const db = client.db();
+
+    try{
+        await db.collection('comments').findOneAndDelete({ "_id": ObjectID(commentID) })
+    }catch(error){
+        throw(error);
+    }finally{
+        client.close();
+    }
+
+    return true;
+}
 
 
 
@@ -101,3 +146,10 @@ async function createClient(){
 }
 
 
+module.exports = {
+    addComment,
+    getAllComments,
+    getComment,
+    updateComment,
+    removeComment
+}

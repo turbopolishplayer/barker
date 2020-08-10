@@ -114,7 +114,7 @@ const updatePost = async function(postID, newContent){
 
 }
 
-const asingComment = async function(postID, commentID){
+const asingCommentToPost = async function(postID, commentID){
 
     if(!(await getPost(postID))) throw new Error('This post doesn\'t exist');
 
@@ -211,7 +211,7 @@ module.exports = {
     createClient,
     removePost,
     unAsingComment,
-    asingComment,
+    asingCommentToPost,
     updatePost,
     getPost,
     getAllPost,
