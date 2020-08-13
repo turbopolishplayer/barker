@@ -92,7 +92,7 @@ const updateComment = async function(commentID, newContent){
     let client;
 
     try{
-        client = await createClient();
+        client = await createClient() ;
     }catch(error){
         throw error;
     }
