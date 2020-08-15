@@ -1,5 +1,6 @@
 const { Router } = require('express');
-const signUp = require('../controllers/registraion.js').signUp
+const signUp = require('../controllers/auth.js').signUp;
+const signIn = require('../controllers/auth.js').signIn;
 const { body } = require('express-validator');
 
 const signUpValidator = [
@@ -11,6 +12,7 @@ const router = Router();
 
 
 router.post('/signup', signUpValidator, signUp);
+router.post('/signin', signIn);
 
 
 

@@ -5,7 +5,7 @@ const helmet = require('helmet')
 const cors = require('cors');
 const morgan = require('morgan');
 
-const registration = require('./routes/registration.js');
+const auth = require('./routes/auth.js');
 
 const notFound = require('./middlewares/notFound.js');
 const errorHandler = require('./middlewares/errorHandler.js');
@@ -29,7 +29,7 @@ app.use(express.json());
 // }));
 
 
-app.use('/auth', registration);
+app.use('/auth', auth);
 
 app.get('/', (req, res) => {
     res.send('Hello');

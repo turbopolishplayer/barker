@@ -1,12 +1,15 @@
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-const userModel = require('../models/user.js');
 
 
+const authorization = async function(req, res, next){
+    try{
+        const did = await jwt.verify(req.body.token, process.env.SECRET_KEY);
+    }catch(err){
+        next(err);
+    }
 
-
-const authorization = function(){
-
+    next();
+        
 }
 
 

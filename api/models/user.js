@@ -9,12 +9,12 @@ const mongoUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/barker';
 
 const createUser = async function(email, name, lastname, password){
 
-    const hashPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
     const user = {
         email: email,
         name: name,
         lastname: lastname,
-        password: hashPassword,
+        password: hashedPassword,
         followers: [],
         following: [],
         posts: [],
@@ -180,11 +180,11 @@ const getUserByEmail = async function(email){
     try{
         result = await db.collection('users').findOne({ email: email });
     }catch(error){
-        console.log(error.message)
+        throw error;
     }finally{
         client.close();
     }
-
+    
     return result;
 
 }
