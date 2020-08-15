@@ -31,12 +31,13 @@ const signIn = async function(req, res, next){
     userModel.getUserByEmail(req.body.email)
     .then(user => {
         bcrypt.compare(req.body.password, user.password)
-        .then(result => {
+        .then(async result => {
             if(!result) {
                 res.status(404)
                 next(new Error('Wrong credentials'));
             }else{
-                const token = jwt.sign(user, process.env.SECRET_KEY)
+                const noPasswordUser = await userModel.getUserByEmailWithoutPassword(req.body.email);
+                const token = jwt.sign(noPasswordUser, process.env.SECRET_KEY);
                 res.json({
                     token: token
                 });

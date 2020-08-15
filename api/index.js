@@ -6,6 +6,7 @@ const cors = require('cors');
 const morgan = require('morgan');
 
 const auth = require('./routes/auth.js');
+const post = require('./routes/postRoutes.js');
 
 const notFound = require('./middlewares/notFound.js');
 const errorHandler = require('./middlewares/errorHandler.js');
@@ -30,6 +31,7 @@ app.use(express.json());
 
 
 app.use('/auth', auth);
+app.use(post);
 
 app.get('/', (req, res) => {
     res.send('Hello');
