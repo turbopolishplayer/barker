@@ -75,6 +75,8 @@ const getPost = async function(postID){
     }
     const db = client.db();
 
+    let result;
+
     try{
         result = await db.collection('posts').findOne(ObjectID(postID));
     }catch(error){
@@ -83,15 +85,23 @@ const getPost = async function(postID){
         client.close();
     }
 
+    if(!result) throw new Error(`Post doesn\'t exist`)
+
     return result;
 }
 
 
 
 
-const updatePost = async function(postID, newContent){
+const updatePost = async function(ownerEmail, postID, newContent){
+    let post;
+    try{
+        post = await getPost(postID)
+    }catch(err){
+        throw new Error('This post doesn\'t exist');
+    }
 
-    if(!(await getPost(postID))) throw new Error('This post doesn\'t exist');
+    if(!(post.owner === ownerEmail)) throw new Error('This user has no permition to update this post')
 
     let client;
 

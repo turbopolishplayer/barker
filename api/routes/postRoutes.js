@@ -5,11 +5,20 @@ const postController = require('../controllers/postController.js')
 
 const router = Router();
 
-const signUpValidator = [
+const addPostValidator = [
     body('token').notEmpty(),
     body('content').notEmpty()
 ];
 
-router.post('/post', authorization, signUpValidator, postController.addPost);
+const modifyPostValidator = [
+    body('token').notEmpty(),
+    body('postid').notEmpty()
+]
+
+router.post('/post', authorization, addPostValidator, postController.addPost);
+
+router.get('/post', authorization, postController.getAllPost);
+
+router.put('/post', authorization, modifyPostValidator, postController.updatePost);
 
 module.exports = router;
