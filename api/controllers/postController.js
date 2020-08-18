@@ -27,12 +27,33 @@ const addPost = async function(req, res, next){
     });
 }
 
+
+
+const getPost = async function(req, res, next){
+
+    postModel.getPost(req.params.id)
+    .then(result => {
+        res.json(result);
+    })
+    .catch(err => {
+        next(err);
+    });
+}
+
+
+
 const getAllPost = async function(req, res, next){
 
     const decodedJWT = jwt.decode(req.body.token);
 
     postModel.getAllPost(decodedJWT.email)
     .then(result => {
+        console.log(req.query.page, req.query.per_page)
+        if(req.query.page && req.query.per_page){
+            const offset = (req.query.page * req.query.per_page) - req.query.per_page
+            result = result.splice(offset , offset+req.query.per_page);
+        }
+        
         res.json(result);
     })
     .catch(err => {
@@ -72,6 +93,7 @@ const updatePost = async function(req, res, next){
 
 module.exports = {
     addPost,
+    getPost,
     getAllPost,
     updatePost
 }

@@ -17,7 +17,10 @@ const modifyPostValidator = [
 
 router.post('/post', authorization, addPostValidator, postController.addPost);
 
+router.get('/post/:id', authorization, postController.getPost);
+
 router.get('/post', authorization, postController.getAllPost);
+
 
 router.put('/post', authorization, modifyPostValidator, postController.updatePost);
 

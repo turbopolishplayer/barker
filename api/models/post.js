@@ -101,7 +101,7 @@ const updatePost = async function(ownerEmail, postID, newContent){
         throw new Error('This post doesn\'t exist');
     }
 
-    if(!(post.owner === ownerEmail)) throw new Error('This user has no permition to update this post')
+    if(post.owner !== ownerEmail) throw new Error('This user has no permition to update this post')
 
     let client;
 
