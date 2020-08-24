@@ -9,7 +9,8 @@ const addPost = async function(ownerEmail, postContent){
         owner: ownerEmail,
         content: postContent,
         comments: [], //comments id 
-        likes: [] //users id 
+        likes: [], //users id 
+        date: new Date().toString()
     }
 
     let client;
@@ -84,7 +85,7 @@ const getPost = async function(postID){
     }finally{
         client.close();
     }
-
+    console.log(result)
     if(!result) throw new Error(`Post doesn\'t exist`)
 
     return result;
@@ -175,7 +176,7 @@ const unAsingComment = async function(postID, commentID){
 
 
 
-const removePost = async function(postID){
+const deletePost = async function(postID){
 
     if(!(await getPost(postID))) throw new Error('This post doesn\'t exist');
 
@@ -219,7 +220,7 @@ async function createClient(){
 
 module.exports = {
     createClient,
-    removePost,
+    deletePost,
     unAsingComment,
     asingCommentToPost,
     updatePost,

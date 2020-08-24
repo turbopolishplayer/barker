@@ -4,11 +4,12 @@ const mongoUrl = process.env.MONGOURI || 'mongodb://localhost:27017/barker';
 
 
 
-const addComment = async function(ownerEmail, underPostID, content){
+const addComment = async function(ownerEmail, postID, content){
     const comment = {
         ownerEmail: ownerEmail,
-        underPostID: underPostID,
-        content: content
+        underPostID: postID,
+        content: content,
+        date: new Date().toString()
     }
 
     let client;
@@ -19,23 +20,25 @@ const addComment = async function(ownerEmail, underPostID, content){
         throw error;
     }
 
+    let result;
+
     try{
         const db = client.db();
-        await db.collection('comments').insertOne(comment)
+        result = await db.collection('comments').insertOne(comment)
     }catch(error){
         throw error;
     }finally{
         client.close();
     }
 
-    return true;
+    return result;
 
 }
 
 
 
 
-const getAllComments = async function(ownerEmail){
+const getAllCommentsByPost = async function(postID){
 
     let client;
 
@@ -49,7 +52,7 @@ const getAllComments = async function(ownerEmail){
     let result;
 
     try{
-        result = await db.collection('comments').find({ owner: ownerEmail }).toArray();
+        result = await db.collection('comments').find({ underPostID: postID }).toArray();
     }catch(error){
         throw(error);
     }finally{
@@ -148,7 +151,7 @@ async function createClient(){
 
 module.exports = {
     addComment,
-    getAllComments,
+    getAllCommentsByPost,
     getComment,
     updateComment,
     removeComment
