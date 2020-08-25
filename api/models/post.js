@@ -8,7 +8,6 @@ const addPost = async function(ownerEmail, postContent){
     const post = {
         owner: ownerEmail,
         content: postContent,
-        comments: [], //comments id 
         likes: [], //users id 
         date: new Date().toString()
     }
@@ -125,53 +124,6 @@ const updatePost = async function(ownerEmail, postID, newContent){
 
 }
 
-const asingCommentToPost = async function(postID, commentID){
-
-    if(!(await getPost(postID))) throw new Error('This post doesn\'t exist');
-
-    let client;
-
-    try{
-        client = await createClient();
-    }catch(error){
-        throw error;
-    }
-    const db = client.db();
-
-    try{
-        await db.collection('posts').updateOne({ "_id": ObjectID(postID)}, { $addToSet: { comments: commentID }})
-    }catch(error){
-        throw(error);
-    }finally{
-        client.close();
-    }
-
-    return true;
-}
-
-const unAsingComment = async function(postID, commentID){
-
-    if(!(await getPost(postID))) throw new Error('This post doesn\'t exist');
-
-    let client;
-
-    try{
-        client = await createClient();
-    }catch(error){
-        throw error;
-    }
-    const db = client.db();
-
-    try{
-        await db.collection('posts').updateOne({ "_id": ObjectID(postID)}, { $pull: { comments: commentID }})
-    }catch(error){
-        throw(error);
-    }finally{
-        client.close();
-    }
-
-    return true;
-}
 
 
 
@@ -221,8 +173,6 @@ async function createClient(){
 module.exports = {
     createClient,
     deletePost,
-    unAsingComment,
-    asingCommentToPost,
     updatePost,
     getPost,
     getAllPost,

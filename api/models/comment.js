@@ -75,8 +75,10 @@ const getComment = async function(commentID){
     }
     const db = client.db();
 
+    let result;
+
     try{
-        result = await db.collection('comments').findOne(ObjectID(postID));
+        result = await db.collection('comments').findOne(ObjectID(commentID));
     }catch(error){
         throw(error);
     }finally{
@@ -88,10 +90,10 @@ const getComment = async function(commentID){
 
 
 
-const updateComment = async function(commentID, newContent){
+const modifyComment = async function(commentID, newContent){
     
     if(!(await getComment(commentID))) throw new Error('This comment doesn\'t exist');
-    l
+    
     let client;
 
     try{
@@ -112,7 +114,7 @@ const updateComment = async function(commentID, newContent){
     return true;
 }
 
-const removeComment = async function(commentID){
+const deleteComment = async function(commentID){
     if(!(await getComment(commentID))) throw new Error('This comment doesn\'t exist');
 
     let client;
@@ -153,6 +155,6 @@ module.exports = {
     addComment,
     getAllCommentsByPost,
     getComment,
-    updateComment,
-    removeComment
+    modifyComment,
+    deleteComment
 }
